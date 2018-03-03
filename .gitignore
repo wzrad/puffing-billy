@@ -4,3 +4,4 @@ log/test.log
 .idea/
 .ruby-version
 *.swp
+pkg/

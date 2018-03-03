@@ -110,7 +110,7 @@ module Billy
 
       url = Addressable::URI.parse(url)
       # Cache the responses if they aren't whitelisted host[:port]s but always cache blacklisted paths on any hosts
-      cacheable_status?(status) && (!whitelisted_url?(url) || blacklisted_path?(url.path))
+      cacheable_status?(status) && ((whitelisted_url?(url) && Billy.config.cache_whitelist) || blacklisted_path?(url.path))
     end
 
     def whitelisted_url?(url)
