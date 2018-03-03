@@ -14,6 +14,8 @@ module Billy
     end
 
     def handle_request(method, url, headers, body)
+      url = transform_url(url)
+
       # Process the handlers by order of importance
       [:stubs, :cache, :proxy].each do |key|
         if (response = handlers[key].handle_request(method, url, headers, body))
@@ -51,6 +53,12 @@ module Billy
     end
 
     private
+
+    def transform_url(url)
+      Billy.config.url_transforms.reduce(url) do |url, transform|
+        transform.call(url)
+      end
+    end
 
     def stub_handler
       handlers[:stubs]
