@@ -69,6 +69,8 @@ module Billy
     end
 
     def key(method, orig_url, body, log_key = false)
+      orig_url = transform_url(orig_url)
+
       if Billy.config.use_ignore_params
         ignore_params = Billy.config.ignore_params.include?(format_url(orig_url, true))
       else
@@ -145,6 +147,12 @@ module Billy
     end
 
     private
+
+    def transform_url(url)
+      Billy.config.cache_url_transforms.reduce(url) do |url, transform|
+        transform.call(url)
+      end
+    end
 
     def _merge_cached_response_key(url)
       Billy.config.merge_cached_responses_whitelist.each do |disable_regex|
